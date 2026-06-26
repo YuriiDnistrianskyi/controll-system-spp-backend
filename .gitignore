@@ -1,2 +1,7 @@
 .venv
 *.__py
+
+.pyc
+.cpython-311.pyc
+
+.env
