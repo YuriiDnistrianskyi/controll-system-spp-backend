@@ -1,0 +1,36 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.service.base_service import BaseService
+from app.database.models.connected_device import ConnectedDevice
+from app.schemas.connected_device_schemas import CreateConnectedDevice, UpdateConnectedDevice
+
+class ConnectedDeviceService(BaseService[ConnectedDevice]):
+
+    async def create(self, schema: CreateConnectedDevice, session: AsyncSession) -> ConnectedDevice:
+        obj = ConnectedDevice(
+            name=schema.name,
+            mac_address=schema.mac_address,
+            system_id=schema.system_id,
+            priority=schema.priority,
+        )
+
+        await self.repository.add(obj, session)
+        return obj
+
+    async def update(self, id: int, schema: UpdateConnectedDevice, session: AsyncSession) -> ConnectedDevice:
+        obj = await self.repository.get_by_id(id, session)
+        data_dict = schema.model_dump(exclude_unset=True)
+
+        if 'name' in data_dict:
+            obj.name = data_dict.get('name')
+
+        if 'mac_address' in data_dict:
+            obj.mac_address = data_dict.get('mac_address')
+
+        if 'system_id' in data_dict:
+            obj.system_id = data_dict.get('system_id')
+
+        if 'priority' in data_dict:
+            obj.priority = data_dict.get('priority')
+
+        return obj
