@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.service.base_service import BaseService
 from app.database.models.user import User
 from app.schemas.user_schemas import CreateUserSchema, UpdateUserSchema, UpdatePasswordUserSchema
-from app.core.serurity import create_hashed_password
+from app.core.serurity import create_hash
 
 
 class AdminService(BaseService[User]):
@@ -13,7 +13,7 @@ class AdminService(BaseService[User]):
             first_name=schema.first_name,
             last_name=schema.last_name,
             email=schema.email,
-            password_hash=create_hashed_password(schema.password),
+            password_hash=create_hash(schema.password),
         )
 
         await self.repository.add(obj, session)
