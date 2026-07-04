@@ -2,16 +2,11 @@ from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database.database import Base
 
-
-class ConnectedDevice(Base):
-    __tablename__ = "connected_device"
+class GatewayDevice(Base):
+    __tablename__ = "gateway_device"
 
     id: Mapped[Integer] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[String] = mapped_column(String)
+    token_hash: Mapped[String] = mapped_column(String, unique=True)
     mac_address: Mapped[String] = mapped_column(String, unique=True)
     system_id: Mapped[Integer] = mapped_column(Integer, ForeignKey("system.id"))
-    priority: Mapped[Integer] = mapped_column(Integer)
-
-    @staticmethod
-    def create_from_dto(dto: dict) -> object:
-        return ConnectedDevice(**dto)
