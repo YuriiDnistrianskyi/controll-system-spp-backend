@@ -49,11 +49,8 @@ class SystemService(BaseService[System]):
             obj.name = data_dict['name']
 
         if 'owner_id' in data_dict:
+            user_to_system = await self.user_to_system_repository.get_by_ids(id, obj.id, session)
+            user_to_system.user_id = data_dict['owner_id']
             obj.owner_id = data_dict['owner_id']
 
         return obj
-
-    async def delete(self, id: int, session: AsyncSession) -> None:
-        super().delete(id, session)
-        #TODO
-
