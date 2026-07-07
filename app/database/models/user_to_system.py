@@ -9,5 +9,5 @@ class UserToSystem(Base):
 
     id: Mapped[Integer] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[Integer] = mapped_column(Integer, ForeignKey('_user.id'))
-    system_id: Mapped[Integer] = mapped_column(Integer, ForeignKey('system.id'))
+    system_id: Mapped[Integer] = mapped_column(Integer, ForeignKey('system.id', ondelete="CASCADE"))
     role_id: Mapped[Integer] = mapped_column(Integer, ForeignKey('role_type.id'))

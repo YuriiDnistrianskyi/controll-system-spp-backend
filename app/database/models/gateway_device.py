@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.database import Base
 
 class GatewayDevice(Base):
@@ -9,4 +9,20 @@ class GatewayDevice(Base):
     name: Mapped[String] = mapped_column(String)
     token_hash: Mapped[String] = mapped_column(String, unique=True)
     mac_address: Mapped[String] = mapped_column(String, unique=True)
-    system_id: Mapped[Integer] = mapped_column(Integer, ForeignKey("system.id"))
+    system_id: Mapped[Integer] = mapped_column(Integer, ForeignKey("system.id", ondelete="CASCADE"))
+
+    system = relationship("System", back_populates="gateway_devices")
+
+    connected_devices = relationship(
+        "ConnectedDevice",
+        back_populates="gateway",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
+
+    sensors = relationship(
+        "Sensor",
+        back_populates="gateway",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )

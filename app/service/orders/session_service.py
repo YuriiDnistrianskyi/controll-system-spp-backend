@@ -7,7 +7,6 @@ from app.core.serurity import create_hash
 
 
 class SessionService(BaseService[Session]):
-    pass
 
     async def create(self, schema: CreateSessionSchema, session: AsyncSession) -> Session:
         obj = Session(
