@@ -1,15 +1,19 @@
-from app.repository.orders.admin_repository import AdminRepository
 from app.repository.orders.connected_device_repository import ConnectedDeviceRepository
 from app.repository.orders.device_type_repository import DeviceTypeRepository
-from app.repository.orders.observer_repository import ObserverRepository
+from app.repository.orders.gateway_device_repository import GatewayDeviceRepository
+from app.repository.orders.role_type_repository import RoleTypeRepository
+from app.repository.orders.sensor_repository import SensorRepository
+from app.repository.orders.session_repository import SessionRepository
 from app.repository.orders.system_repository import SystemRepository
-from app.repository.orders.system_device_repository import SystemDeviceRepository
-from app.repository.orders.system_to_observer_repository import SystemToObserverRepository
+from app.repository.orders.user_repository import UserRepository
+from app.repository.orders.user_to_system_repository import UserToSystemRepository
 
-admin_repository = AdminRepository()
 connected_device_repository = ConnectedDeviceRepository()
 device_type_repository = DeviceTypeRepository()
-observer_repository = ObserverRepository()
+gateway_device_repository = GatewayDeviceRepository()
+role_type_repository = RoleTypeRepository()
+sensor_repository = SensorRepository()
+session_repository = SessionRepository()
 system_repository = SystemRepository()
-system_device_repository = SystemDeviceRepository()
-system_to_observer_repository = SystemToObserverRepository()
+user_repository = UserRepository()
+user_to_system_repository = UserToSystemRepository()
