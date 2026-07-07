@@ -6,7 +6,7 @@ from app.repository.orders.user_to_system_repository import UserToSystemReposito
 from app.repository.orders.role_type_repository import RoleTypeRepository
 from app.database.models.system import System
 from app.database.models.user_to_system import UserToSystem
-from app.schemas.system_schemas import CreateSystemSchema, UpdateSystemSchema
+from app.schemas.system_schemas import CreateSystemSchema, UpdateSystemSchema, ManageObserverSchema
 
 
 class SystemService(BaseService[System]):
@@ -54,3 +54,18 @@ class SystemService(BaseService[System]):
             obj.owner_id = data_dict['owner_id']
 
         return obj
+
+    async def add_observer(self, schema: ManageObserverSchema, session: AsyncSession) -> None:
+        observer_type_id = await self.role_type_repository.get_observer_type_id(session)
+
+        user_to_system = UserToSystem(
+            user_id=schema.user_id,
+            system_id=schema.system_id,
+            role_id=observer_type_id
+        )
+
+        await self.user_to_system_repository.add(user_to_system, session)
+
+    async def remove_observer(self, schema: ManageObserverSchema, session: AsyncSession) -> None:
+        user_to_system = await self.user_to_system_repository.get_by_ids(schema.user_id, schema.system_id, session)
+        await self.user_to_system_repository.delete(user_to_system, session)

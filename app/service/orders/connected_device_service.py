@@ -10,7 +10,7 @@ class ConnectedDeviceService(BaseService[ConnectedDevice]):
         obj = ConnectedDevice(
             name=schema.name,
             mac_address=schema.mac_address,
-            system_id=schema.system_id,
+            gateway_device_id=schema.gateway_device_id,
             priority=schema.priority,
         )
 
@@ -27,8 +27,8 @@ class ConnectedDeviceService(BaseService[ConnectedDevice]):
         if 'mac_address' in data_dict:
             obj.mac_address = data_dict.get('mac_address')
 
-        if 'system_id' in data_dict:
-            obj.system_id = data_dict.get('system_id')
+        if 'gateway_device_id' in data_dict:
+            obj.gateway_device_id = data_dict.get('gateway_device_id')
 
         if 'priority' in data_dict:
             obj.priority = data_dict.get('priority')
