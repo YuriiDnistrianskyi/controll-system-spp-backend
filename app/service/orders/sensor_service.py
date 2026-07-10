@@ -25,7 +25,7 @@ class SensorService(BaseService[Sensor]):
             name=schema.name,
             mac_address=schema.mac_address,
             type_id=device_type_id,
-            system_id=schema.system_id,
+            gateway_device_id=schema.gateway_device_id,
         )
 
         await self.repository.add(obj, session)
@@ -44,7 +44,7 @@ class SensorService(BaseService[Sensor]):
         if 'type_id' in data_dict: #
             obj.type_id = data_dict['type_id']
 
-        if 'system_id' in data_dict:
-            obj.system_id = data_dict['system_id']
+        if 'gateway_device_id' in data_dict:
+            obj.gateway_device_id = data_dict['gateway_device_id']
 
         return obj
