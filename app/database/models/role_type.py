@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.database.database import Base
+from app.database.engine import Base
 
 
 class RoleType(Base):
