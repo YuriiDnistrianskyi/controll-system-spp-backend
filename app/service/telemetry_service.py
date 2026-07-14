@@ -26,12 +26,12 @@ class TelemetryService:
     async def get(self, device_id: int, field: str) -> list[dict[str, Any]]:
         return await self.repository.get(device_id, field)
 
-    def get_last_record(self, device_id: int) -> dict[str, Any]:
-        return  self.repository.get_last_record(device_id)
+    async def get_last_record(self, device_id: int) -> dict[str, Any]:
+        return await self.repository.get_last_record(device_id)
 
-    def get_last_field(self, device_id: int, field: str) -> dict[str, Any]:
-        return  self.repository.get_last_field(device_id, field)
+    async def get_last_field(self, device_id: int, field: str) -> dict[str, Any]:
+        return await self.repository.get_last_field(device_id, field)
 
-    def add(self, point: Point) -> None:
-         self.repository.add(point)
+    async def add(self, point: Point) -> None:
+         await self.repository.add(point)
 
