@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.repository.relational.base_repository import BaseRepository
+from app.repository.base_repository import BaseRepository
 from app.database.models.user_to_system import UserToSystem
 
 

@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.repository.relational import DeviceTypeRepository
+from app.repository.orders.device_type_repository import DeviceTypeRepository
 from app.service.base_service import BaseService
-from app.repository.relational.base_repository import BaseRepository
+from app.repository.base_repository import BaseRepository
 from app.database.models.sensor import Sensor
 from app.schemas.sensor_schemas import CreateSensorSchema, UpdateSensorSchema
 
@@ -25,7 +25,7 @@ class SensorService(BaseService[Sensor]):
             name=schema.name,
             mac_address=schema.mac_address,
             type_id=device_type_id,
-            gateway_device_id=schema.gateway_device_id,
+            system_id=schema.system_id,
         )
 
         await self.repository.add(obj, session)
@@ -44,7 +44,7 @@ class SensorService(BaseService[Sensor]):
         if 'type_id' in data_dict: #
             obj.type_id = data_dict['type_id']
 
-        if 'gateway_device_id' in data_dict:
-            obj.gateway_device_id = data_dict['gateway_device_id']
+        if 'system_id' in data_dict:
+            obj.system_id = data_dict['system_id']
 
         return obj

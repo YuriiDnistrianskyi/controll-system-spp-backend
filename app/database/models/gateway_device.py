@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.database.engine import Base
+from app.database.database import Base
 
 class GatewayDevice(Base):
     __tablename__ = "gateway_device"
