@@ -2,11 +2,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.service.base_service import BaseService
 from app.database.models.user import User
-from app.schemas.user_schemas import CreateUserSchema, UpdateUserSchema
+from app.schemas.user_schemas import CreateUserSchema, UpdateUserSchema, UpdatePasswordUserSchema
 from app.core.serurity import create_hash
 
 
-class UserService(BaseService[User]):
+class AdminService(BaseService[User]):
 
     async def create(self, schema: CreateUserSchema, session: AsyncSession) -> User:
         obj = User(

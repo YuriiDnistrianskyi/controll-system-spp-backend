@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.service.base_service import BaseService
-from app.repository.relational.base_repository import BaseRepository
-from app.repository.relational import UserToSystemRepository
-from app.repository.relational import RoleTypeRepository
+from app.repository.base_repository import BaseRepository
+from app.repository.orders.user_to_system_repository import UserToSystemRepository
+from app.repository.orders.role_type_repository import RoleTypeRepository
 from app.database.models.system import System
 from app.database.models.user_to_system import UserToSystem
 from app.schemas.system_schemas import CreateSystemSchema, UpdateSystemSchema, ManageObserverSchema

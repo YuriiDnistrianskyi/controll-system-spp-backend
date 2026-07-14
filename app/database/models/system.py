@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, DateTime, ForeignKey
-from app.database.engine import Base
+from app.database.database import Base
 
 
 class System(Base):
