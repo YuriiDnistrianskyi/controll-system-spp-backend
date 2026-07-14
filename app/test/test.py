@@ -9,10 +9,13 @@ data = {
 }
 
 async def test() -> None:
-    await sensor_telemetry_service.add(data)
+    # await sensor_telemetry_service.add(data)
+    #
+    # result = await sensor_telemetry_service.get_records(2)
+    # print(result)
 
-    result = await sensor_telemetry_service.get_records(2)
-    print(result)
+    for device in data:
+        print(device)
 
 
 if __name__ == "__main__":

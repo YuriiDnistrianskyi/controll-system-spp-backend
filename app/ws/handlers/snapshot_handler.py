@@ -1,7 +1,8 @@
 from app.service import TelemetryService
+from app.ws.handlers.i_handler import IHandler
 
 
-class SnapshotHandler:
+class SnapshotHandler(IHandler):
     def __init__(
             self,
             battery_service: TelemetryService,

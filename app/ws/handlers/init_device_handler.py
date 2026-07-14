@@ -4,14 +4,16 @@ from app.service.orders.connected_device_service import ConnectedDeviceService
 from app.service.orders.sensor_service import SensorService
 from app.schemas.connected_device_schemas import CreateConnectedDeviceSchema
 from app.schemas.sensor_schemas import CreateSensorSchema
+from app.ws.handlers.i_handler import IHandler
 
 
-class InitDeviceHandler:
+class InitDeviceHandler(IHandler):
     def __init__(self, sensor_service: SensorService, connected_device_service: ConnectedDeviceService):
         self.sensor_service = sensor_service
         self.connected_device_service = connected_device_service
 
-    async def handle(self, data: dict, session: AsyncSession) -> None:
+    async def handle(self, data: dict) -> None:
+        session: AsyncSession = None
         gateway_id = data["gateway_id"]
         sensors_data = data["sensors"]
         if sensors_data:
