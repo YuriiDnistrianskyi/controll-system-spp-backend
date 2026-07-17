@@ -1,3 +1,5 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.service import TelemetryService
 from app.ws.handlers.i_handler import IHandler
 
@@ -13,7 +15,7 @@ class SnapshotHandler(IHandler):
         self.network_service = network_service
         self.sensor_service = sensor_service
 
-    async def handle(self, data):
+    async def handle(self, data, session: AsyncSession):
         gateway_id = data["gateway_id"]
 
         battery_data = data["battery"]
