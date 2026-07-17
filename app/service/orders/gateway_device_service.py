@@ -1,13 +1,19 @@
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Any, Dict
 
 from app.service.base_service import BaseService
 from app.database.models.gateway_device import GatewayDevice
-from app.schemas.gateway_device_schemas import CreateGatewayDeviceSchema, UpdateGatewayDeviceSchema
-from app.core.serurity import create_hash
+from app.repository.relational.gateway_device_repository import GatewayDeviceRepository
+from app.schemas.gateway_device_schemas import CreateGatewayDeviceSchema, UpdateGatewayDeviceSchema, AuthGatewayDeviceSchema, InitGatewayDeviceSchema
+from app.core.serurity import create_hash, verify_hash
+from app.ws import ws_manager
 
 
 class GatewayDeviceService(BaseService[GatewayDevice]):
+    def __init__(self, repository: GatewayDeviceRepository) -> None:
+        self.repository = repository
+
     async def create(self, schema: CreateGatewayDeviceSchema, session: AsyncSession) -> Dict[str, Any]:
         token = 'token' #TODO
         obj = GatewayDevice(
@@ -41,3 +47,33 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
 
     # async def update_token(self):
     #     pass
+
+    async def authenticate(self, schema: AuthGatewayDeviceSchema, session: AsyncSession) -> int:
+        data = schema.model_dump(exclude_unset=True)
+
+        gateway = await self.repository.get_by_id(data['id'], session)
+        is_auth: bool = verify_hash(str(gateway.token_hash), data['token'])
+        if not is_auth:
+            raise HTTPException(status_code=401, detail='Invalid token')
+        return data['id']
+
+    async def initialize(self, schema: InitGatewayDeviceSchema, session: AsyncSession) -> int:
+        data = schema.model_dump(exclude_unset=True)
+
+        gateway: GatewayDevice = await self.repository.get_by_token_hash(data['token'], session)
+        if gateway is None:
+            raise HTTPException(status_code=404, detail='Gateway not found')
+
+        gateway.mac_address = data['mac_address']
+        await session.commit()
+
+        await ws_manager.switch(data['mac_address'], gateway.id)
+
+        msg = {
+            'type': 'success_auth',
+            'gateway_id': gateway.id
+        }
+
+        await ws_manager.send(gateway.id, msg)
+
+        return int(gateway.id)

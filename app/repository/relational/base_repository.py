@@ -15,6 +15,8 @@ class BaseRepository(Generic[T]):
 
     async def get_by_id(self, id: int, session: AsyncSession) -> T:
         obj = await session.get([T], id)
+        if not obj:
+            raise HTTPException(status_code=404)
         return obj
 
     async def add(self, obj: T, session: AsyncSession) -> None:

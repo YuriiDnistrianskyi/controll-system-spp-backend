@@ -13,3 +13,11 @@ class UpdateGatewayDeviceSchema(BaseModel):
 
 class UpdateTokenGatewayDeviceSchema(BaseModel):
     token: str
+
+class AuthGatewayDeviceSchema(BaseModel):
+    id: int
+    token: str
+
+class InitGatewayDeviceSchema(BaseModel):
+    token: str
+    mac_address: str
