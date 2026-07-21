@@ -6,6 +6,8 @@ from app.database.models.gateway_device import GatewayDevice
 
 
 class GatewayDeviceRepository(BaseRepository[GatewayDevice]):
+    _mode = GatewayDevice
+
     async def get_by_token_lookup(self, token_lookup: str, session: AsyncSession) -> GatewayDevice:
         stmt = select(GatewayDevice).where(GatewayDevice.token_lookup == token_lookup)
         obj = await session.execute(stmt)

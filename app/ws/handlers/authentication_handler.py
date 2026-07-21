@@ -15,5 +15,7 @@ class AuthenticationHandler(IHandler):
             token=data['token']
         )
 
+        print('-----handle______')
+
         gateway_id: int = await self.gateway_service.authenticate(schema, session)
         return gateway_id

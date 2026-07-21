@@ -29,9 +29,7 @@ async def websocket_endpoint(
 
         print('finish json')
         async with session_factory() as session:
-            print('start session')
             gateway_id = await dispatcher.authenticate(payload, session)
-            print("success")
     except Exception as ex:
         print(f'Error: {ex}')
         await ws_manager.close(gateway_id=gateway_id, mac_address=mac_address)

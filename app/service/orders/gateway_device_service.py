@@ -62,7 +62,9 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
     async def authenticate(self, schema: AuthGatewayDeviceSchema, session: AsyncSession) -> int:
         data = schema.model_dump(exclude_unset=True)
 
+        print('----------------auth')
         gateway = await self.repository.get_by_id(data['id'], session)
+        print('2')
         is_auth: bool = verify_hash(str(gateway.token_hash), data['token'])
         if not is_auth:
             raise HTTPException(status_code=401, detail='Invalid token')
