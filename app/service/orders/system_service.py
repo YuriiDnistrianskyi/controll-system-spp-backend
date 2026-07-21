@@ -27,7 +27,7 @@ class SystemService(BaseService[System]):
         )
 
         await self.repository.add(obj, session)
-        # await session.commit()
+        await session.commit()
         await session.refresh(obj)
 
         admin_id: int = await self.role_type_repository.get_admin_type_id(session)

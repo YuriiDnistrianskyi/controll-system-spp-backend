@@ -8,7 +8,7 @@ class Dispatcher:
             self,
             snapshot_handler: IHandler,
             init_device_handler: IHandler,
-            authorization_handler: IHandler,
+            authentication_handler: IHandler,
             initialization_handler: IHandler,
     ) -> None:
         self.handlers = {
@@ -16,7 +16,7 @@ class Dispatcher:
             'init_device': init_device_handler
         }
         self.auth_handlers = {
-            'authorization': authorization_handler,
+            'authentication': authentication_handler,
             'initialization': initialization_handler,
         }
 
@@ -26,10 +26,11 @@ class Dispatcher:
         if msg_type in self.handlers:
             await self.handlers[msg_type].handle(data, session)
 
-    async def authorize(self, data: dict, session: AsyncSession) -> int:
+    async def authenticate(self, data: dict, session: AsyncSession) -> int:
         msg_type = data['type']
 
         if msg_type in self.auth_handlers:
             gateway_id: int = await self.auth_handlers[msg_type].handle(data, session)
+            return gateway_id
         else:
-            raise Exception('Authorization error')
+            raise Exception(f'Not find type {msg_type}')

@@ -11,9 +11,4 @@ class Sensor(Base):
     type_id: Mapped[Integer] = mapped_column(Integer, ForeignKey("device_type.id"))
     gateway_device_id: Mapped[Integer] = mapped_column(Integer, ForeignKey("gateway_device.id", ondelete="CASCADE"))
 
-    gateway_device = relationship(
-        "GatewayDevice",
-        back_populates="sensors",
-        cascade="all, delete-orphan",
-        passive_deletes=True,
-    )
+    gateway_device = relationship("GatewayDevice", back_populates="sensors")

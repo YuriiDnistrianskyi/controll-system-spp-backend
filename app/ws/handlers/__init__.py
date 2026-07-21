@@ -15,11 +15,11 @@ init_device_handler = InitDeviceHandler(
     connected_device_service=connected_device_service,
 )
 
-authorize_handler = AuthenticationHandler(
+authentication_handler = AuthenticationHandler(
     gateway_service=gateway_device_service
 )
 
-initialize_handler = InitializationHandler(
+initialization_handler = InitializationHandler(
     gateway_service=gateway_device_service
 )
 

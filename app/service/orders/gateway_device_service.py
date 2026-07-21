@@ -1,12 +1,14 @@
+from alembic.command import branches
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Any, Dict
+import secrets
 
 from app.service.base_service import BaseService
 from app.database.models.gateway_device import GatewayDevice
 from app.repository.relational.gateway_device_repository import GatewayDeviceRepository
 from app.schemas.gateway_device_schemas import CreateGatewayDeviceSchema, UpdateGatewayDeviceSchema, AuthGatewayDeviceSchema, InitGatewayDeviceSchema
-from app.core.serurity import create_hash, verify_hash
+from app.core.serurity import create_hash, verify_hash, create_lookup
 from app.ws import ws_manager
 
 
@@ -15,11 +17,11 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
         self.repository = repository
 
     async def create(self, schema: CreateGatewayDeviceSchema, session: AsyncSession) -> Dict[str, Any]:
-        token = 'token' #TODO
+        token = await self.__create_token(session)
         obj = GatewayDevice(
             name=schema.name,
             token_hash=create_hash(token),
-            mac_address=schema.mac_address,
+            token_lookup=create_lookup(token),
             system_id=schema.system_id,
         )
 
@@ -28,6 +30,15 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
             'obj': obj,
             'token': token
         }
+
+    async def __create_token(self, session: AsyncSession) -> str:
+        while True:
+            token: str = secrets.token_hex(32)
+
+            exist = await self.repository.get_by_token_lookup(create_lookup(token), session)
+
+            if exist is None:
+                return token
 
 
     async def update(self, id: int, schema: UpdateGatewayDeviceSchema, session: AsyncSession) -> GatewayDevice:
@@ -60,7 +71,7 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
     async def initialize(self, schema: InitGatewayDeviceSchema, session: AsyncSession) -> int:
         data = schema.model_dump(exclude_unset=True)
 
-        gateway: GatewayDevice = await self.repository.get_by_token_hash(data['token'], session)
+        gateway: GatewayDevice = await self.repository.get_by_token_lookup(create_lookup(data['token']), session)
         if gateway is None:
             raise HTTPException(status_code=404, detail='Gateway not found')
 

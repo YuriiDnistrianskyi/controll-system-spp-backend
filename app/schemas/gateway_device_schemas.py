@@ -3,7 +3,7 @@ from typing import Optional
 
 class CreateGatewayDeviceSchema(BaseModel):
     name: str
-    mac_address: str
+    # mac_address: str
     system_id: int
 
 class UpdateGatewayDeviceSchema(BaseModel):
