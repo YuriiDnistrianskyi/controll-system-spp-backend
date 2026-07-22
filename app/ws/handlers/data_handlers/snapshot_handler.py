@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.service import TelemetryService
-from app.ws.handlers.i_handler import IHandler
+from app.ws.handlers.data_handlers.i_handler import IHandler
 
 
 class SnapshotHandler(IHandler):

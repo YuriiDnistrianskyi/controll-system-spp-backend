@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.service.orders.gateway_device_service import GatewayDeviceService
 from app.schemas.gateway_device_schemas import AuthGatewayDeviceSchema
-from app.ws.handlers.i_auth_handler import IAuthHandler
+from app.ws.handlers.auth_handlers.i_auth_handler import IAuthHandler
 
 
 class AuthenticationHandler(IAuthHandler):

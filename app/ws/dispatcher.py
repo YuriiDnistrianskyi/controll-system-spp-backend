@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.ws.handlers.i_handler import IHandler
-from app.ws.handlers.i_auth_handler import IAuthHandler
+from app.ws.handlers.data_handlers.i_handler import IHandler
+from app.ws.handlers.auth_handlers.i_auth_handler import IAuthHandler
 
 
 class Dispatcher:

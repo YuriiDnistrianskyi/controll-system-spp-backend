@@ -4,7 +4,7 @@ from app.service.orders.connected_device_service import ConnectedDeviceService
 from app.service.orders.sensor_service import SensorService
 from app.schemas.connected_device_schemas import CreateConnectedDeviceSchema
 from app.schemas.sensor_schemas import CreateSensorSchema
-from app.ws.handlers.i_handler import IHandler
+from app.ws.handlers.data_handlers.i_handler import IHandler
 
 
 class InitDeviceHandler(IHandler):
