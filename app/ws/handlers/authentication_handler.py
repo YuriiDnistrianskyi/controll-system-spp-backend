@@ -2,10 +2,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.service.orders.gateway_device_service import GatewayDeviceService
 from app.schemas.gateway_device_schemas import AuthGatewayDeviceSchema
-from app.ws.handlers.i_handler import IHandler
+from app.ws.handlers.i_auth_handler import IAuthHandler
 
 
-class AuthenticationHandler(IHandler):
+class AuthenticationHandler(IAuthHandler):
     def __init__(self, gateway_service: GatewayDeviceService):
         self.gateway_service = gateway_service
 
@@ -14,8 +14,6 @@ class AuthenticationHandler(IHandler):
             id=data['gateway_id'],
             token=data['token']
         )
-
-        print('-----handle______')
 
         gateway_id: int = await self.gateway_service.authenticate(schema, session)
         return gateway_id

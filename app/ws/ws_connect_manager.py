@@ -20,7 +20,11 @@ class WsManager:
 
     async def close(self, gateway_id: int=None, mac_address: str=None):
         if gateway_id and gateway_id in self.auth_connections:
+            ws = self.auth_connections[gateway_id]
+            await ws.close()
             self.auth_connections.pop(gateway_id)
 
         if mac_address and mac_address in self.connections:
+            ws = self.connections[mac_address]
+            await ws.close()
             self.connections.pop(mac_address)

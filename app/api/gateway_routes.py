@@ -20,14 +20,11 @@ async def websocket_endpoint(
 
     gateway_id: int | None = None
 
-    print('ok')
 
     try:
         data = await websocket.receive_text()
-        print('get data')
         payload = json.loads(data)
 
-        print('finish json')
         async with session_factory() as session:
             gateway_id = await dispatcher.authenticate(payload, session)
     except Exception as ex:
@@ -36,9 +33,11 @@ async def websocket_endpoint(
 
     try:
         while True:
-            data = await websocket.receive_json()
+            data = await websocket.receive_text()
+            payload = json.loads(data)
+
             async with session_factory() as session:
-                await dispatcher.dispatch(data, session)
+                await dispatcher.dispatch(payload, gateway_id, session)
     except Exception as ex:
         print(f'Error: {ex}')
         await ws_manager.close(gateway_id=gateway_id)

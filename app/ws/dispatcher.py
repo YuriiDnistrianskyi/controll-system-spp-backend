@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ws.handlers.i_handler import IHandler
+from app.ws.handlers.i_auth_handler import IAuthHandler
 
 
 class Dispatcher:
@@ -8,8 +9,8 @@ class Dispatcher:
             self,
             snapshot_handler: IHandler,
             init_device_handler: IHandler,
-            authentication_handler: IHandler,
-            initialization_handler: IHandler,
+            authentication_handler: IAuthHandler,
+            initialization_handler: IAuthHandler,
     ) -> None:
         self.handlers = {
             'snapshot': snapshot_handler,
@@ -20,11 +21,11 @@ class Dispatcher:
             'initialization': initialization_handler,
         }
 
-    async def dispatch(self, data: dict, session: AsyncSession) -> None:
+    async def dispatch(self, data: dict, gateway_id: int, session: AsyncSession) -> None:
         msg_type = data['type']
 
         if msg_type in self.handlers:
-            await self.handlers[msg_type].handle(data, session)
+            await self.handlers[msg_type].handle(data, gateway_id, session)
 
     async def authenticate(self, data: dict, session: AsyncSession) -> int:
         msg_type = data['type']

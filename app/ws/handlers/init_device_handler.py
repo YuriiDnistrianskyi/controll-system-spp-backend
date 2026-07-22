@@ -12,7 +12,7 @@ class InitDeviceHandler(IHandler):
         self.sensor_service = sensor_service
         self.connected_device_service = connected_device_service
 
-    async def handle(self, data: dict, session: AsyncSession) -> None:
+    async def handle(self, data: dict, gateway_id: int, session: AsyncSession) -> None:
         # session: AsyncSession = None
         gateway_id = data["gateway_id"]
         sensors_data = data["sensors"]

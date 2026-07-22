@@ -15,20 +15,18 @@ class SnapshotHandler(IHandler):
         self.network_service = network_service
         self.sensor_service = sensor_service
 
-    async def handle(self, data, session: AsyncSession):
-        gateway_id = data["gateway_id"]
-
-        battery_data = data["battery"]
-        if battery_data:
-            # battery_data["device_id"] = gateway_id # front_sensor_id | not gateway
-            await self.battery_service.add(battery_data)
-
-        network_data = data["network"]
+    async def handle(self, data, gateway_id: int, session: AsyncSession):
+        network_data = data.get("network")
         if network_data:
             network_data["device_id"] = gateway_id
             await self.network_service.add(network_data)
 
-        sensor_data = data["sensor"]
+        battery_data = data.get("battery")
+        if battery_data:
+            for battery in battery_data:
+                await self.battery_service.add(battery)
+
+        sensor_data = data.get("sensor")
         if sensor_data:
             for sensor in sensor_data:
                 await self.sensor_service.add(sensor)

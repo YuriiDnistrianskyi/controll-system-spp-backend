@@ -8,7 +8,7 @@ from app.repository.non_relational.base_non_relational_repository import BaseNon
 class TelemetryService:
     def __init__(self, repository: BaseNonRelationalRepository):
         self.__repository = repository
-        self.__measurement = repository.measurement
+        self.__measurement = repository._measurement
 
     async def __create_point(self, data: dict) -> Point:
         point = Point(self.__measurement)
