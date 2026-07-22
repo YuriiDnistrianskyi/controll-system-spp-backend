@@ -1,10 +1,9 @@
-from alembic.command import branches
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Any, Dict
 import secrets
 
-from app.service.base_service import BaseService
+from app.service.base.base_service import BaseService
 from app.database.models.gateway_device import GatewayDevice
 from app.repository.relational.gateway_device_repository import GatewayDeviceRepository
 from app.schemas.gateway_device_schemas import CreateGatewayDeviceSchema, UpdateGatewayDeviceSchema, AuthGatewayDeviceSchema, InitGatewayDeviceSchema

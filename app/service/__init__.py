@@ -7,7 +7,9 @@ from app.service.orders.user_service import UserService
 
 from app.repository.relational import *
 
-from app.service.telemetry_service import TelemetryService
+from app.service.orders.battery_data_service import BatteryDataService
+from app.service.orders.network_data_service import NetworkDataService
+from app.service.orders.sensor_data_service import SensorDataService
 
 from app.repository.non_relational import *
 
@@ -18,6 +20,6 @@ session_service = SessionService(session_repository)
 system_service = SystemService(system_repository, user_to_system_repository, role_type_repository)
 user_service = UserService(user_repository)
 
-battery_telemetry_service = TelemetryService(battery_repository)
-network_telemetry_service = TelemetryService(network_repository)
-sensor_telemetry_service = TelemetryService(sensor_data_repository)
+battery_telemetry_service = BatteryDataService(battery_repository)
+network_telemetry_service = NetworkDataService(network_repository)
+sensor_telemetry_service = SensorDataService(sensor_data_repository)

@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.repository.relational import DeviceTypeRepository
-from app.service.base_service import BaseService
+from app.service.base.base_service import BaseService
 from app.repository.relational.base_repository import BaseRepository
 from app.database.models.sensor import Sensor
 from app.schemas.sensor_schemas import CreateSensorSchema, UpdateSensorSchema

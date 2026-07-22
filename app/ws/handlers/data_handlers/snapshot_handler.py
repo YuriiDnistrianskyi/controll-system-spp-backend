@@ -24,7 +24,7 @@ class SnapshotHandler(IHandler):
         battery_data = data.get("battery")
         if battery_data:
             for battery in battery_data:
-                await self.battery_service.add(battery)
+                await self.battery_service.add(battery, session)
 
         sensor_data = data.get("sensor")
         if sensor_data:

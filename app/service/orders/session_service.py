@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.service.base_service import BaseService
+from app.service.base.base_service import BaseService
 from app.database.models.session import Session
 from app.schemas.session_schemas import CreateSessionSchema, UpdateSessionSchema
 from app.core.serurity import create_hash

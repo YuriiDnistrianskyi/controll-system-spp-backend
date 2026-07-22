@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.service.base_service import BaseService
+from app.service.base.base_service import BaseService
 from app.database.models.connected_device import ConnectedDevice
 from app.schemas.connected_device_schemas import CreateConnectedDeviceSchema, UpdateConnectedDeviceSchema
 

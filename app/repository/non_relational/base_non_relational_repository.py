@@ -10,6 +10,9 @@ class BaseNonRelationalRepository:
         self.__write_api = writer_api
         self.__query_api = query_api
 
+    def get_measurement(self) -> str:
+        return self._measurement
+
     async def get_records(self, device_id: int, start: str = "-30d") -> list[dict[str, Any]]:
         query = f"""
                 from(bucket: "{INFLUXDB_BUCKET}")

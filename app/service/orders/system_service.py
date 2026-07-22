@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.service.base_service import BaseService
+from app.service.base.base_service import BaseService
 from app.repository.relational.base_repository import BaseRepository
 from app.repository.relational import UserToSystemRepository
 from app.repository.relational import RoleTypeRepository
