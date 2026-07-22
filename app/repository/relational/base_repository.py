@@ -16,7 +16,10 @@ class BaseRepository(Generic[T]):
         return result
 
     async def get_by_id(self, id: int, session: AsyncSession) -> T:
+        print('---')
+        print(type(session))
         obj = await session.get(self._model, id)
+        print('---')
         if not obj:
             raise HTTPException(status_code=404)
         return obj

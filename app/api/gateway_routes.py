@@ -34,11 +34,11 @@ async def websocket_endpoint(
         print(f'Error: {ex}')
         await ws_manager.close(gateway_id=gateway_id, mac_address=mac_address)
 
-    # try:
-    #     while True:
-    #         data = await websocket.receive_json()
-    #         async with session_factory() as session:
-    #             await dispatcher.dispatch(data, session)
-    # except Exception as ex:
-    #     print(f'Error: {ex}')
-    #     await ws_manager.close(gateway_id=gateway_id)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            async with session_factory() as session:
+                await dispatcher.dispatch(data, session)
+    except Exception as ex:
+        print(f'Error: {ex}')
+        await ws_manager.close(gateway_id=gateway_id)
