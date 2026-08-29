@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.service import TelemetryService
+from app.service.base.telemetry_service import TelemetryService
 from app.ws.handlers.data_handlers.i_handler import IHandler
 
 

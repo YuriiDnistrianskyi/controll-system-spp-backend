@@ -19,5 +19,5 @@ class AuthGatewayDeviceSchema(BaseModel):
     token: str
 
 class InitGatewayDeviceSchema(BaseModel):
-    token: str
     mac_address: str
+    activate_code: str

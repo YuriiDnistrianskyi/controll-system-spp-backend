@@ -2,12 +2,14 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Any, Dict
 import secrets
+from datetime import datetime, timedelta
 
 from app.service.base.base_service import BaseService
 from app.database.models.gateway_device import GatewayDevice
 from app.repository.relational.gateway_device_repository import GatewayDeviceRepository
 from app.schemas.gateway_device_schemas import CreateGatewayDeviceSchema, UpdateGatewayDeviceSchema, AuthGatewayDeviceSchema, InitGatewayDeviceSchema
-from app.core.serurity import create_hash, verify_hash, create_lookup
+from app.core.serurity import create_hash, verify_hash, create_lookup, create_activate_code
+from app.exceptions import NotFoundException, ExpiredException
 from app.ws import ws_manager
 
 
@@ -20,7 +22,6 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
         obj = GatewayDevice(
             name=schema.name,
             token_hash=create_hash(token),
-            token_lookup=create_lookup(token),
             system_id=schema.system_id,
         )
 
@@ -39,8 +40,16 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
             if exist is None:
                 return token
 
+    async def create_activate_code(self, id_: int, session) -> None:
+        gateway = await self.repository.get_by_id(id_, session)
+        if gateway is None:
+            raise NotFoundException('Gateway not found')
+        gateway.activate_code = create_activate_code()
+        gateway.activate_code_expire_time = datetime.now() + timedelta(minutes=5)
+        await session.commit()
 
-    async def update(self, id: int, schema: UpdateGatewayDeviceSchema, session: AsyncSession) -> GatewayDevice:
+
+    async def update(self, id_: int, schema: UpdateGatewayDeviceSchema, session: AsyncSession) -> GatewayDevice:
         obj = await self.repository.get_by_id(id, session)
         data_dict = schema.model_dump(exclude_unset=True)
 
@@ -70,11 +79,18 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
     async def initialize(self, schema: InitGatewayDeviceSchema, session: AsyncSession) -> int:
         data = schema.model_dump(exclude_unset=True)
 
-        gateway: GatewayDevice = await self.repository.get_by_token_lookup(create_lookup(data['token']), session)
+        gateway: GatewayDevice = await self.repository.get_by_activate_code(data.get('activate_code'), session)
+
         if gateway is None:
-            raise HTTPException(status_code=404, detail='Gateway not found')
+            raise NotFoundException('Gateway not found')
+
+        if not gateway.activate_code_expire_time < datetime.now():
+            raise ExpiredException('Activate code expired')
 
         gateway.mac_address = data['mac_address']
+        gateway.activate_code = None
+        gateway.activate_code_expire_time = None #
+
         await session.commit()
 
         await ws_manager.switch(data['mac_address'], gateway.id)

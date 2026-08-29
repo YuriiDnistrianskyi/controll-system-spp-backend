@@ -11,7 +11,7 @@ class InitializationHandler(IAuthHandler):
 
     async def handle(self, data: dict, session: AsyncSession) -> int: #TODO
         schema = InitGatewayDeviceSchema(
-            token=data['token'],
+            activate_code=data['activate_code'],
             mac_address=data['mac_address']
         )
 
