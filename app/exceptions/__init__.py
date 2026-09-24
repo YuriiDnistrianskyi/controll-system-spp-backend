@@ -4,3 +4,7 @@ class NotFoundException(Exception):
 
 class ExpiredException(Exception):
     pass
+
+
+class IncorrectDataException(Exception):
+    pass

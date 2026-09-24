@@ -13,8 +13,13 @@ class WsManager:
         self.auth_connections[gateway_id] = self.connections[mac_address]
         self.connections.pop(mac_address)
 
-    async def send(self, gateway_id: int, data: dict):
+    async def send_by_id(self, gateway_id: int, data: dict):
         ws = self.auth_connections[gateway_id]
+        if ws:
+            await ws.send_json(data)
+
+    async def send_by_mac_address(self, mac_address: str, data: dict):
+        ws = self.connections[mac_address]
         if ws:
             await ws.send_json(data)
 

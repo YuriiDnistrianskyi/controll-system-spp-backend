@@ -29,6 +29,12 @@ async def websocket_endpoint(
             gateway_id = await dispatcher.authenticate(payload, session)
     except Exception as ex:
         print(f'Error: {ex}')
+        msg = {
+            'type': 'auth',
+            'result': 'error',
+            'msg': str(ex)
+        }
+        ws_manager.send_by_mac_address(mac_address, msg)
         await ws_manager.close(gateway_id=gateway_id, mac_address=mac_address)
 
     try:

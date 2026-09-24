@@ -9,7 +9,7 @@ from app.database.models.gateway_device import GatewayDevice
 from app.repository.relational.gateway_device_repository import GatewayDeviceRepository
 from app.schemas.gateway_device_schemas import CreateGatewayDeviceSchema, UpdateGatewayDeviceSchema, AuthGatewayDeviceSchema, InitGatewayDeviceSchema
 from app.core.serurity import create_hash, verify_hash, create_lookup, create_activate_code
-from app.exceptions import NotFoundException, ExpiredException
+from app.exceptions import NotFoundException, ExpiredException, IncorrectDataException
 from app.ws import ws_manager
 
 
@@ -18,17 +18,14 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
         self.repository = repository
 
     async def create(self, schema: CreateGatewayDeviceSchema, session: AsyncSession) -> Dict[str, Any]:
-        token = await self.__create_token(session)
         obj = GatewayDevice(
             name=schema.name,
-            token_hash=create_hash(token),
             system_id=schema.system_id,
         )
 
         await self.repository.add(obj, session)
         return {
             'obj': obj,
-            'token': token
         }
 
     async def __create_token(self, session: AsyncSession) -> str:
@@ -73,7 +70,8 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
         gateway = await self.repository.get_by_id(data['id'], session)
         is_auth: bool = verify_hash(str(gateway.token_hash), data['token'])
         if not is_auth:
-            raise HTTPException(status_code=401, detail='Invalid token')
+            raise Exception('Invalid token')
+        # TODO send list of devices to gateway
         return data['id']
 
     async def initialize(self, schema: InitGatewayDeviceSchema, session: AsyncSession) -> int:
@@ -87,6 +85,8 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
         if not gateway.activate_code_expire_time < datetime.now():
             raise ExpiredException('Activate code expired')
 
+        token = await self.__create_token(session)
+        gateway.token_hash = create_hash(token)
         gateway.mac_address = data['mac_address']
         gateway.activate_code = None
         gateway.activate_code_expire_time = None #
@@ -96,10 +96,12 @@ class GatewayDeviceService(BaseService[GatewayDevice]):
         await ws_manager.switch(data['mac_address'], gateway.id)
 
         msg = {
-            'type': 'success_auth',
-            'gateway_id': gateway.id
+            'type': 'init',
+            'result': 'success',
+            'gateway_id': gateway.id,
+            'token': token
         }
 
-        await ws_manager.send(gateway.id, msg)
+        await ws_manager.send_by_id(gateway.id, msg)
 
         return int(gateway.id)

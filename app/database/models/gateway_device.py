@@ -8,7 +8,7 @@ class GatewayDevice(Base):
 
     id: Mapped[Integer] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[String] = mapped_column(String)
-    token_hash: Mapped[String] = mapped_column(String, unique=True)
+    token_hash: Mapped[String] = mapped_column(String, unique=True, nullable=True)
     token_lookup: Mapped[String] = mapped_column(String, unique=True)
     activate_code_hash: Mapped[String] = mapped_column(String, unique=True, nullable=True)
     activate_code_expire_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)

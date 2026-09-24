@@ -11,7 +11,7 @@ class AuthenticationHandler(IAuthHandler):
 
     async def handle(self, data: dict, session: AsyncSession) -> int:
         schema = AuthGatewayDeviceSchema(
-            id=data['gateway_id'],
+            id=data['id'],
             token=data['token']
         )
 
